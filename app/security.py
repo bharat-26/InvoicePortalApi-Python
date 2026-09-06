@@ -1,5 +1,6 @@
 import bcrypt
 import jwt
+import random
 from datetime import datetime, timedelta, timezone
 
 from app.config import get_settings
@@ -11,12 +12,15 @@ def verify_password(password: str, password_hash: str):
         password_hash.encode("utf-8")
     )
 
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
 
 def create_access_token(user_id: int, email: str):
     settings = get_settings()
 
     expire_time = datetime.now(timezone.utc) + timedelta(
-        hours=settings.jwt_expiry_hours #it should be in utc & change the expiry hours
+        minutes=settings.jwt_expiry_minutes
     )
 
     payload = {

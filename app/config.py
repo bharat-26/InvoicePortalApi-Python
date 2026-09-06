@@ -11,8 +11,15 @@ class Settings(BaseSettings):
     database_url: str
     jwt_secret: str
     jwt_issuer: str = "InvoicePortalAPI"
-    jwt_expiry_hours: int = 8
+    jwt_expiry_minutes: int
     cors_allowed_origins: str = "http://localhost:4200"
+
+    smtp_host: str
+    smtp_port: int
+    smtp_username: str
+    smtp_password: str
+
+    otp_expiry_minutes: int
 
     @property
     def cors_origin_list(self) -> list[str]:
