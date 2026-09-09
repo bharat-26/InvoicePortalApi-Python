@@ -10,10 +10,16 @@ from sqlalchemy import (
 )
 from sqlalchemy.sql import func
 from app.database import Base
-
+from sqlalchemy.orm import relationship
 
 class Invoice(Base):
     __tablename__ = "invoices"
+
+    items = relationship(
+    "InvoiceItem",
+    back_populates="invoice",
+    cascade="all, delete-orphan"
+    )
 
     id = Column(
         BigInteger,
@@ -97,6 +103,11 @@ class Invoice(Base):
 
 class InvoiceItem(Base):
     __tablename__ = "invoice_items"
+
+    invoice = relationship(
+    "Invoice",
+    back_populates="items"
+  )
 
     id = Column(
         BigInteger,

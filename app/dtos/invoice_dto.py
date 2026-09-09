@@ -1,16 +1,16 @@
 from pydantic import BaseModel  
-from datetime import date
 from decimal import Decimal
+from datetime import date
 
 
 
 
 class InvoiceItemDTO(BaseModel):
     description: str
-    quantity: Decimal
+    quantity: Decimal=1
     unit_price: Decimal
 
-class InvoiceDTO(BaseModel):
+class InvoiceDTO(BaseModel): 
     invoice_number: str
     customer_id: int
     invoice_date: date
@@ -19,5 +19,4 @@ class InvoiceDTO(BaseModel):
     tax_rate: Decimal
     items: list[InvoiceItemDTO]
 
-    
 
