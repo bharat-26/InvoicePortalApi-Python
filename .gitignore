@@ -7,3 +7,4 @@ venv/
 .idea/
 .vscode/
 create_test_user.py
+seed_user.py

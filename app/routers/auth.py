@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta, timezone
 
@@ -9,13 +9,14 @@ from app.schemas import LoginRequest, VerifyOTPRequest
 from app.security import verify_password, create_access_token, generate_otp
 from app.email_service import send_otp_email
 from app.config import get_settings
+# from app.services.audit_service import audit_event
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 @router.post("/login")
-def login(data: LoginRequest, db: Session = Depends(get_db)):
+def login(data: LoginRequest, request: Request, db: Session = Depends(get_db)):
 
     settings = get_settings()
 
