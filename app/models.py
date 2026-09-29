@@ -8,12 +8,15 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     CheckConstraint,
+    Text,
 )
 
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+from datetime import datetime
 
 
 class User(Base):
@@ -32,8 +35,6 @@ class EmailOTP(Base):
     email: Mapped[str] = mapped_column(String(200), nullable=False, unique=True)
     otp: Mapped[str] = mapped_column(String(6), nullable=False)
     expires_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), nullable=False)
-
-################################################################
 
 class Invoice(Base):
     __tablename__ = "invoices"
@@ -115,7 +116,9 @@ class Invoice(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "status IN ('Draft', 'Sent', 'Paid', 'Cancelled')",
+            "status IN "
+            "('Draft', 'Processing', 'Sent', 'Paid', "
+            "'Failed', 'Rejected', 'Cancelled')",
             name="ck_invoices_status"
         ),
         CheckConstraint(
@@ -218,3 +221,15 @@ class Customer(Base):
         nullable=False,
         server_default=func.now()
     )
+
+class AuditLog(Base):
+    __tablename__ = "audit_logs"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    event_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(200),nullable=True)
+    user_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="SET NULL"),nullable=True)
+    ip_address: Mapped[str | None] = mapped_column(String(45), nullable=True)
+    details: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())

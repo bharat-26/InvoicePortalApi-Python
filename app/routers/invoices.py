@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from app.database import get_db
 from app.dtos.invoice_dto import InvoiceDTO
-from app.models import Invoice, InvoiceItem
+from app.models import Invoice, InvoiceItem, Customer
 from app.dtos.invoice_responsedto import InvoiceResponseDTO
 from app.dtos.invoice_status_response import InvoiceStatusResponseDTO
 
@@ -39,6 +39,7 @@ def create_invoice(
         sub_total=sub_total,
         tax_amount=tax_amount,
         total=total,
+        status="Processing",
         items=[
             InvoiceItem(
                 description=item.description,
@@ -61,7 +62,7 @@ def create_invoice(
         raise
    
 
-    return invoice 
+    return invoice_model
 
 
 @router.get("/invoice-status/{invoice_number}",response_model=InvoiceStatusResponseDTO)
